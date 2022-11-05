@@ -11,6 +11,8 @@ file_handler = FileHandler('errorlog.txt')
 file_handler.setLevel(WARNING)
 CORS(app)
 app.config["DEBUG"] = True
+NEWS_JSON_FILE = '../data/news.json'
+NEWS_FEED_NUM = 5
 
 @app.route('/api/v1/register/', methods=['GET','POST'])
 def register():
@@ -37,6 +39,23 @@ def login():
     validate_data['valid'] = valid
     validate_data['data'] = data
     return jsonify(validate_data)
+
+
+def read_news_json():
+    with open(NEWS_JSON_FILE,'r+') as file:
+        file_data = json.load(file)
+    return file_data
+
+
+@app.route('/api/v1/newsfeed/', methods=['GET', 'POST'])
+def newsfeed():
+    db_obj = NewsDatabase()
+    latest_news_ids = db_obj.fecth_newsfeed()[:NEWS_FEED_NUM]
+    news_feed = {}
+    file_data = read_news_json()
+    for id in latest_news_ids:
+        news_feed[id] = file_data[str(id)]
+    return jsonify(news_feed)
 
 
 @app.route('/api/v1/newsfeed/', methods=['GET','POST'])
