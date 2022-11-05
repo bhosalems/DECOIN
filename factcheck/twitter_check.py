@@ -15,18 +15,19 @@ class Tweet:
     def fetch_tweets(self, text):
         keywords = extract(text)
         new = []
-        search = " or ".join(keywords)
-        print(search)
-        limit = 50
-        tweets = tweepy.Cursor(self.api.search_tweets, q=search, tweet_mode='extended').items(limit)
+        if len(keywords)>2:
+            search = " OR ".join(keywords)
+        else:
+            search = "twitter" 
+        tweets = tweepy.Cursor(self.api.search_tweets, q=search, tweet_mode='extended', lang="en")
         twt = []
-        for tweet in tweets:
-            twt.append(tweet.id)
-        return twt
+        for tweet in tweets.items():
+            twt.append(tweet.full_text)
+        return len(twt)
 
 
 if __name__ == '__main__':
-    text = "Google or Amazon"
+    text = "Apple is going to buy U.K startup"
     keys = {"cons": "RVYNRvLMepLrtNvqh3mmseXsP",
             "cons_secret": "2DGvSVFZkhzJDV6rJc5xEzX0nLTsO2ZOpdmxhxv0s5GNerDVga",
             "acc": "1567974750953119744-oOLwIBeSKiG6AkLMtJ4rh7SG4SsRZW",

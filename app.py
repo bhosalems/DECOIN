@@ -1,7 +1,7 @@
 import flask
 from flask import request, jsonify
 from logging import FileHandler,WARNING
-from transaction_file import NewsDatabase
+from backend.transaction_file import NewsDatabase
 import os
 import json
 from flask_cors import CORS
@@ -10,7 +10,7 @@ app = flask.Flask(__name__)
 file_handler = FileHandler('errorlog.txt')
 file_handler.setLevel(WARNING)
 CORS(app)
-app.config["DEBUG"] = True
+# app.config["DEBUG"] = True
 NEWS_JSON_FILE = '../data/news.json'
 NEWS_FEED_NUM = 5
 
@@ -244,5 +244,10 @@ def unit_test():
 def print_request_data():
     print(flask.request.forms)
 
+@app.route('/hello')
+def helloworld():
+    return "Hello hacking world, i am abhishek from ub, and this is a test render"
+# app.run()
 
-app.run()
+if __name__ == '__main__':
+    app.run(debug=True, host="0.0.0.0", port=5000)
