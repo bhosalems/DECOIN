@@ -1,7 +1,7 @@
 import flask
 from flask import request, jsonify
 from logging import FileHandler,WARNING
-from trans_file import NewsDatabase
+from transaction_file import NewsDatabase
 import os
 import json
 from flask_cors import CORS
@@ -82,3 +82,33 @@ def write_json(new_data, filename=NEWS_JSON_FILE):
             json.dump(file_data, file, indent = 4)
     
 
+@app.route('/api/v1/publish/', methods=['GET'])
+def publish():
+    db_obj = NewsDatabase()
+    article_data = {}
+    article_body = str(request.forms['article'])
+    article_data['news_id'] = db_obj.get_newsid()
+    article_data['user_id'] = request.forms['user_id']
+    article_data['timestamp'] = datetime.datetime.now()
+    article_data['tags'] = request.forms['tags']
+    db_obj.insert_article(article_data)
+    write_json((int(article_data['news_id']), article_body), NEWS_JSON_FILE)
+    return "Successfully submitted"
+
+
+@app.route('/api/v1/fetchreview/', methods=['GET', 'POST'])
+def fetch_forreview():
+    db_obj = NewsDatabase()
+    file_data = read_news_json()
+    user_id = request.forms['user_id']
+    article_data = {}
+    res = db_obj.fetch_forreview(user_id)
+    for r in res:
+        article_data[r[0]] = {"tags":r[1], "timestamp":r[2], "data":file_data[str(r[0])]}
+    return jsonify(article_data)
+
+
+def print_request_data():
+    print(flask.request.forms)
+
+app.run()
