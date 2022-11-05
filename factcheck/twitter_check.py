@@ -13,23 +13,20 @@ class Tweet:
         self.api = tweepy.API(auth)
     
     def fetch_tweets(self, text):
-        # keywords = extract(text)
-        # new = []
-        # for word in keywords:
-        #     new.append('#'+word)
-        # search = " ".join(new)
-        search = 'apple or uk'
+        keywords = extract(text)
+        new = []
+        search = " or ".join(keywords)
+        print(search)
         limit = 50
         tweets = tweepy.Cursor(self.api.search_tweets, q=search, tweet_mode='extended').items(limit)
         twt = []
-        # tweets = self.api.search_tweets(search)
         for tweet in tweets:
             twt.append(tweet.id)
         return twt
 
 
 if __name__ == '__main__':
-    text = "Apple is planning to buy U.K startup for $1 billion."
+    text = "Google or Amazon"
     keys = {"cons": "RVYNRvLMepLrtNvqh3mmseXsP",
             "cons_secret": "2DGvSVFZkhzJDV6rJc5xEzX0nLTsO2ZOpdmxhxv0s5GNerDVga",
             "acc": "1567974750953119744-oOLwIBeSKiG6AkLMtJ4rh7SG4SsRZW",
