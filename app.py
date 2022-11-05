@@ -1,4 +1,5 @@
 import flask
+import requests
 from flask import request, jsonify
 from logging import FileHandler,WARNING
 from backend.transaction_file import NewsDatabase
@@ -11,7 +12,7 @@ file_handler = FileHandler('errorlog.txt')
 file_handler.setLevel(WARNING)
 CORS(app)
 # app.config["DEBUG"] = True
-NEWS_JSON_FILE = '../data/news.json'
+NEWS_JSON_FILE = 'data/news.json'
 NEWS_FEED_NUM = 5
 
 # Dummy data is just used for unittest
@@ -204,6 +205,37 @@ def fetch_forreview():
     return jsonify(article_data)
 
 
+@app.route('/api/v1/factcheck/', methods=['GET', 'POST'])
+def factcheck():
+    query = request.forms['query']
+    payload = {
+    'key': 'AIzaSyCYffI72ziHUcQ3sly2IkZJ7fFMQlMefmI',
+    'query':query
+    }
+    url ='https://factchecktools.googleapis.com/v1alpha1/claims:search'
+    response = requests.get(url,params=payload)
+    print(response.reason)
+    if response.status_code == 200:
+        result = json.loads(response.text)
+        # Arbitrarily select 1
+        try:
+            topRating = result["claims"][0]
+            # arbitrarily select top 1
+            claimReview = topRating["claimReview"][0]["textualRating"]
+            claimVal = "According to " + str(topRating["claimReview"][0]['publisher']['name'])+ " that claim is " + str(claimReview)
+            return claimVal           
+        except:
+            print("No claim review field found.")
+            return 0
+    else:
+        return 0
+
+
+@app.route('/api/v1/')
+def hello_world():
+    return "Hello World"
+
+
 @app.route('/api/v1/test/', methods=['GET'])
 def unit_test():
     args = dict(request.args)
@@ -239,6 +271,12 @@ def unit_test():
             id=int(args['id'])
             mock_context.request.forms = {'user_id':id}
             res = fetch_forreview()
+    elif testid == 'factcheck':
+        with app.test_request_context() as mock_context:
+            mock_context.request.forms = {'query':"Trump is making money off covid coins."}
+            res = factcheck()
+            print(res)
+            res = "P"
     return res
 
 def print_request_data():
