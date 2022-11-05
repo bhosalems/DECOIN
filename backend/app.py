@@ -58,7 +58,27 @@ def newsfeed():
     return jsonify(news_feed)
 
 
-@app.route('/api/v1/newsfeed/', methods=['GET','POST'])
-def newsfeed():
-    return
+@app.route('/api/v1/vote/', methods=['GET'])
+def vote():
+    db_obj = NewsDatabase()
+    user_id, news_id, rev = request.forms['user_id'], request.forms['news_id'], request.forms['status']
+    db_obj.update_review_status(user_id, news_id, rev)
+    return "Vote submitted successfully"
+
+
+def write_json(new_data, filename=NEWS_JSON_FILE):
+    if not os.path.exists(filename):
+        open(filename, 'w').close()
+        file_data = {}
+        file_data[new_data[0]] = new_data[1]
+        with open(filename,'r+') as file:
+            file.seek(0)
+            json.dump(file_data, file, indent = 4)
+    else:
+        with open(filename,'r+') as file:
+            file_data = json.load(file)
+            file_data[new_data[0]] = new_data[1]
+            file.seek(0)
+            json.dump(file_data, file, indent = 4)
+    
 
