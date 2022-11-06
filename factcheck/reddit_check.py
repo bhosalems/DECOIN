@@ -6,6 +6,7 @@ from psaw import PushshiftAPI
 api = PushshiftAPI()
 from keyword_ex import extract
 import warnings
+warnings.filterwarnings("ignore")
 
 class Reddit:
     def __init__(self):
@@ -22,7 +23,7 @@ class Reddit:
                                             subreddits= subreddits,
                                             filter=['id','title','selftext'],
                                             limit = 50,
-                                            num_comments=">5")
+                                            num_comments=">20")
                 submissions_df = pd.DataFrame(list(gen))
                 self.global_submissions = self.global_submissions.append(submissions_df)
             except:
