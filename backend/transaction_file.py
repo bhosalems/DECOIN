@@ -32,7 +32,7 @@ class NewsDatabase:
             news_id = c.fetchone()[0]+1
             return news_id
 
-    #TODO: edit news id logic
+    
     def insert_article(self,article):
         c = self.conn.cursor()
         user_id = article["user_id"]
@@ -105,7 +105,6 @@ class NewsDatabase:
         self.conn.commit()
         
 
-
     def authenticate_user(self ,pad):
         c = self.conn.cursor()
         c.execute("SELECT * FROM user WHERE public_addr = ? ", (pad,))
@@ -120,6 +119,38 @@ class NewsDatabase:
         else:
             return False, {}
     
+    #called when user opens an article
+    def bal_onview(self,user_id):
+        c = self.conn.cursor()
+        c.execute("SELECT balance FROM user WHERE user_id = ? ", (user_id,))
+        balance = int(c.fetchone()[0])
+        if balance >= 0.1:
+            balance -= 0.1
+            c.execute("UPDATE user SET balance = ? WHERE user_id = ?", (balance, user_id))
+            self.conn.close()
+            return True
+        else:
+            return False
+    
+    #called when the status in article column is updated to 1
+    def bal_onpublish(self, user_id):
+        c = self.conn.cursor()
+        c.execute("SELECT balance FROM user WHERE user_id = ? ", (user_id,))
+        balance = int(c.fetchone()[0])
+        balance += 0.1
+        c.execute("UPDATE user SET balance = ? WHERE user_id = ?", (balance, user_id))
+        self.conn.close()
+
+    #called when reviewer submits after article review
+    def bal_onreview(self,reviewer_id):
+        c = self.conn.cursor()
+        c.execute("SELECT balance FROM user WHERE user_id = ? ", (reviewer_id,))
+        balance = int(c.fetchone()[0])
+        balance += 0.05
+        c.execute("UPDATE user SET balance = ? WHERE user_id = ?", (balance, reviewer_id))
+        self.conn.close()
+
+
     def close_dbcon(self):
         self.conn.close()
 
