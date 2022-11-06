@@ -1,9 +1,26 @@
 import React from 'react'
+import  ReadTab  from './ReadTab'
+import { Box } from '@mui/system';
 
-const readlist = () => {
+const readList = ({data}) => {
+    console.log("nesasdf",data)
   return (
-    <div>readlist</div>
+    <Box sx={
+        {
+           display:'flex',
+           flexDirection:'row',
+           justifyContent: 'space-evenly',
+           flexWrap:'wrap',
+        }    
+     }   >
+     {data.map((dat)=> 
+                <ReadTab key={dat.id} 
+                           dat={dat}/>
+                   )
+                        
+      }
+     </Box>
   )
 }
 
-export default readlist
+export default readList

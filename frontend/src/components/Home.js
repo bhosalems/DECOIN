@@ -65,6 +65,7 @@ export default function Home() {
   };
   const [user,setUser]=useState(null);
   const [reviews,setReviews]=useState(null);
+  const [news, setNews]=useState(null)
 
   useEffect(() => {
      const usr=localStorage.getItem("user");
@@ -75,10 +76,11 @@ export default function Home() {
 
      //
 //fetch the read news
-const fetchNews= async ()=>{
+const fetchNews = async ()=>{
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+  // myHeaders.append()
   var requestOptions = {
       method: "GET",
       headers: myHeaders,
@@ -90,6 +92,9 @@ const fetchNews= async ()=>{
     .then((res) => res.json())
     .then((res) => {
       console.log("result",res);
+      setNews(res)
+      console.log("this is news")
+      console.log("news state",res)
     })
     .catch((error) => console.log(error));
    };
@@ -165,7 +170,7 @@ const fetchNews= async ()=>{
           
         
        
-    <Box sx={{ width: '100%' }}>
+     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="News Viewer" {...a11yProps(0)} />
@@ -173,17 +178,8 @@ const fetchNews= async ()=>{
           <Tab label="Review an article" {...a11yProps(2)} />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        {/* <Box  sx={{
-          display:'flex',
-          flexDirection:'row',
-          justifyContent:'space-between'
-        }}
-        >
-      
-       </Box> */}
-
-       <ReadList/>
+      <TabPanel value={value} index={0}>  
+       {news && (<ReadList data={news}/>)}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <WriteTab/>

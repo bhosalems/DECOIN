@@ -26,11 +26,10 @@ c.execute("""CREATE TABLE IF NOT EXISTS article(
 
 c.execute("""CREATE TABLE IF NOT EXISTS review(
         review_id INTEGER PRIMARY KEY AUTOINCREMENT DEFAULT 1,
-        user_id INTEGER,
         news_id INTEGER,
         reviewer_id INTEGER,
         status INTEGER,
-        FOREIGN KEY(user_id) REFERENCES user(user_id),
+        FOREIGN KEY(reviewer_id) REFERENCES user(user_id),
         FOREIGN KEY(news_id) REFERENCES article(news_id))
         """)
 

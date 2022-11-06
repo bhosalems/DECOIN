@@ -119,12 +119,21 @@ const addUser = async (config) => {
     console.log("config recieved in the backend service",config);
     console.log('url to hit to the fetch',url);
 
-    fetch(url, config)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("data",data);
-      return data;
-    });
+    // fetch(url, config)
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   console.log("data",data);
+    //   return data;
+    // });
+
+    const res=await fetch(url, config)
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   console.log("data",data);
+    //   return data;
+    // });
+    console.log("response",res);
+    return res;
 
 
   };

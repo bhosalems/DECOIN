@@ -1,10 +1,10 @@
 import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container ,Card, Col, Button} from 'react-bootstrap';
 // import img1 from './logo192.png';
 import "../App.css";
 
-// import '../css/home.css'
+// import '../css/home.css' 
 const HomePage = () => {
   return (
     

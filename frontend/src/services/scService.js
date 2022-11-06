@@ -83,7 +83,7 @@ const read = async (account, deposit) => {
     const status = await Dnews.methods.read().send({
       from: account,
       gas: 2000000,
-      value: ethers.utils.parseEther(String(deposit)),
+      value: ethers.utils.parseEther(String(0.5)),
     });
   } catch (error) {
     console.log("error in read", error);

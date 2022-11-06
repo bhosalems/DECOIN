@@ -109,7 +109,7 @@ export default function ButtonAppBar() {
           </IconButton>
           <Typography  variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <Button color='inherit' onClick={gotoHome}>
-            DC NEWS
+            DECOIN
           </Button>
           </Typography>
           {localStorage.getItem("isLogged")=="true"?

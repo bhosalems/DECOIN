@@ -13,7 +13,7 @@ file_handler.setLevel(WARNING)
 CORS(app)
 # app.config["DEBUG"] = True
 NEWS_JSON_FILE = 'data/news.json'
-NEWS_FEED_NUM = 5
+NEWS_FEED_NUM = 3
 
 # Dummy data is just used for unittest
 dummy_data = {
@@ -119,6 +119,7 @@ def get_data(request):
 
 @app.route('/api/v1/register/', methods=['POST'])
 def register():
+    print("in register")
     db_obj = NewsDatabase()
     final_data = get_data(request)
     user_data = {}
@@ -136,14 +137,19 @@ def register():
 
 @app.route('/api/v1/login/', methods=['GET'])
 def login():
+     
     db_obj = NewsDatabase()
     validate_data = {}
-    final_data = get_data(request)
-    if 'public_addr' in final_data:
-        valid, data = db_obj.authenticate_user(final_data['public_addr'])
-    validate_data['valid'] = valid
-    validate_data['data'] = data
-    return jsonify(validate_data)
+    final_data = request.headers.get('public_addr')
+    print("type of final data", type(final_data))
+    print("final data",final_data)
+   
+    valid, data = db_obj.authenticate_user(final_data)
+    print("valid",valid,"data",data)
+    if valid:
+        return jsonify(data)
+    else:
+        return  jsonify({"error": "error",}), 403
 
 
 def read_news_json():
@@ -156,17 +162,21 @@ def read_news_json():
 def newsfeed():
     db_obj = NewsDatabase()
     latest_news_ids = db_obj.fecth_newsfeed()[:NEWS_FEED_NUM]
-    news_feed = {}
+    print("latest_news_ids",latest_news_ids)
+    news_feed = []
     file_data = read_news_json()
     for id in latest_news_ids:
-        news_feed[id] = file_data[str(id)]
+        
+        news_feed.append(file_data[str(id)])
     return jsonify(news_feed)
 
 
-@app.route('/api/v1/vote/', methods=['GET'])
+@app.route('/api/v1/vote/', methods=['POST','GET'])
 def vote():
     db_obj = NewsDatabase()
-    final_data = get_data(request)
+    # final_data = get_data(request)
+    final_data = json.loads(request.data)
+    print("final+data",final_data)
     user_id, news_id, rev = final_data['user_id'], final_data['news_id'], final_data['status']
     db_obj.update_review_status(user_id, news_id, rev)
     return "Vote submitted successfully"
@@ -188,11 +198,14 @@ def write_json(new_data, filename=NEWS_JSON_FILE):
             json.dump(file_data, file, indent = 4)
 
 
-@app.route('/api/v1/publish/', methods=['GET'])
+@app.route('/api/v1/publish/', methods=['GET','POST'])
 def publish():
+    print("in publish")
     db_obj = NewsDatabase()
     article_data = {}
     final_data = get_data(request)
+    print("final",final_data)
+    print("final",type(final_data))
     article_body = str(final_data['article'])
     article_data['news_id'] = db_obj.get_newsid()
     article_data['user_id'] = final_data['user_id']
@@ -207,12 +220,24 @@ def publish():
 def fetch_forreview():
     db_obj = NewsDatabase()
     file_data = read_news_json()
-    final_data = get_data(request)
-    user_id = final_data['user_id']
-    article_data = {}
-    res = db_obj.fetch_forreview(user_id)
+    # final_data = get_data(request)
+    user_data = request.headers.get('user_id')
+    user_data=json.loads(user_data)
+    # print(type(user_data))
+    user_id = user_data['id']
+    article_data = []
+    res = db_obj.fetch_forreview(user_data['id'])
     for r in res:
-        article_data[r[0]] = {"tags":r[1], "timestamp":r[2], "data":file_data[str(r[0])]}
+        # article_data=[ 
+        #            {"id":r[0], "tags":r[1], "timestamp":r[2], "data":file_data[str(r[0])
+        #               ]
+        #               }
+        article_data.append( {"id":r[0], 
+                              "tags":r[1], 
+                         "timestamp":r[2], 
+                        "data":file_data[str(r[0])]
+                           })
+    print("article_data",article_data)
     return jsonify(article_data)
 
 
