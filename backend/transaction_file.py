@@ -1,6 +1,7 @@
 import sqlite3
 import random
 import os
+from factcheck import intent,google_factcheck,reddit_check,twitter_check
 
 class NewsDatabase:
     def __init__(self):
@@ -149,6 +150,39 @@ class NewsDatabase:
         balance += 0.05
         c.execute("UPDATE user SET balance = ? WHERE user_id = ?", (balance, reviewer_id))
         self.conn.close()
+
+    def check_intent(self, text):
+        return intent.intent_check(text)
+        
+
+    def check_relevancy(self, text):
+        count = 0
+        reddit_obj = reddit_check.Reddit()
+        count += reddit_obj.fetch_reddit(text)
+        try:
+            twitter_obj = twitter_check.Tweet()
+            count += twitter_obj.fetch_tweets(text)
+        except:
+            count = count
+        if count > 100:
+            return "relevant"
+        else:
+            return "irrelevant"
+
+    def check_fact(self,text):
+        sentences = text.split(".")
+        reviews = []
+        for line in sentences:
+            review = google_factcheck.factcheck(line)
+            if review:
+                reviews.append(review)
+            else:
+                pass
+        if review:
+            return random.choice(reviews)
+        else:
+            return "not a relevant article"
+
 
 
     def close_dbcon(self):

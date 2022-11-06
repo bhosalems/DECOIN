@@ -14,15 +14,15 @@ export default function ButtonAppBar() {
         <Toolbar>
           <IconButton
             size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            {/* <MenuIcon /> */}
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            // onClick={handleOpenNavMenu}
+            color="inherit">
+            <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            DC NEWS
+            DECOIN
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>

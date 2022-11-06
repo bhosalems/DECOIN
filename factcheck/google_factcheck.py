@@ -20,6 +20,6 @@ def factcheck(query):
             return claimReview           
         except:
             print("No claim review field found.")
-            return 0
+            return None
     else:
-        return 0
+        return None
