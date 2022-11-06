@@ -215,7 +215,7 @@ def factcheck():
 def hello_world():
     return "Hello World"
 
-
+text = 'Russia has tried to implicate the United States in the leaks, and a recent Facebook post echoes this'
 @app.route('/api/v1/test/', methods=['GET'])
 def unit_test():
     args = dict(request.args)
