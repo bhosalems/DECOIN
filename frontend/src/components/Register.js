@@ -96,23 +96,23 @@ export default function SignUp() {
         redirect: "follow",
       };
     console.log("user:",user);
-      // const register_status = scService
-      //   .register(account, data.get('Deposit'))
-      //   .then((e) => {
+      const register_status = scService
+        .register(account, data.get('Deposit'))
+        .then((e) => {
         console.log("requestOptions passed in the fetch request",requestOptions)
           const res = be.addUser(requestOptions);
-        // });
+        });
       
-      //   toast.promise(register_status, {
-      //   pending: "Processing",
-      //   success: "Registered Successfully",
-      //   error: "Registration Failed",
-      // });
+        toast.promise(register_status, {
+        pending: "Processing",
+        success: "Registered Successfully",
+        error: "Registration Failed",
+      });
 
-      // navigate("/", { replace: true });
+      navigate("/", { replace: true });
     // } else {
     //   toast.error("Not a Valid Deposit");
-    // }
+    
 
     //send request to sc
     
