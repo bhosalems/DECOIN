@@ -1,5 +1,4 @@
 import flask
-import requests
 from flask import request, jsonify
 from logging import FileHandler,WARNING
 from backend.transaction_file import NewsDatabase
@@ -7,6 +6,7 @@ import os
 import json
 from flask_cors import CORS
 import datetime
+from factcheck import google_factcheck
 app = flask.Flask(__name__)
 file_handler = FileHandler('errorlog.txt')
 file_handler.setLevel(WARNING)
@@ -208,28 +208,8 @@ def fetch_forreview():
 @app.route('/api/v1/factcheck/', methods=['GET', 'POST'])
 def factcheck():
     query = request.forms['query']
-    payload = {
-    'key': '',
-    'query':query
-    }
-    url ='https://factchecktools.googleapis.com/v1alpha1/claims:search'
-    response = requests.get(url,params=payload)
-    print(response)
-    if response.status_code == 200:
-        result = json.loads(response.text)
-        # Arbitrarily select 1
-        try:
-            topRating = result["claims"][0]
-            # arbitrarily select top 1
-            claimReview = topRating["claimReview"][0]["textualRating"]
-            # claimVal = "According to " + str(topRating["claimReview"][0]['publisher']['name'])+ " that claim is " + str(claimReview)
-            return claimReview           
-        except:
-            print("No claim review field found.")
-            return 0
-    else:
-        return 0
-
+    res = google_factcheck(query)
+    return res
 
 @app.route('/api/v1/')
 def hello_world():
@@ -273,10 +253,9 @@ def unit_test():
             res = fetch_forreview()
     elif testid == 'factcheck':
         with app.test_request_context() as mock_context:
-            mock_context.request.forms = {'query':'Speaker Nancy Pelosi held a T-shirt that reads, “I’m proud of my gay husband."'}
-            res = factcheck()
-            print(res)
-            res = "P"
+            test_text = open("test_text.txt", "r")
+            mock_context.request.forms = {'query':test_text.read()}
+            res = str(factcheck())
     return res
 
 def print_request_data():
