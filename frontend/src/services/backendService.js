@@ -9,32 +9,15 @@ const addUser = async (config) => {
     const url = `${baseUrl}${relativeUrl}`;
     console.log("config recieved in the backend service",config);
     console.log('url to hit to the fetch',url);
-    // return fetch(url);
-    // return fetch(url,config)
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw new Error(res);
-    //     }
-    //     return handleResponse(res);
-    //   })
-    //   .catch((e) => handleErrors(e));
-
-  //   var config = {
-  //     method: 'POST',
-  //    headers: {"Content-Type":"application/json"},
-  //     data: JSON.stringify(body)
-  // };
- 
-  ///
-  fetch(url, config)
+   
+   fetch(url, config)
   .then((response) => response.json())
   .then((data) => {
     console.log("data",data);
+    return data;
   });
 
 
-  // const response = await axios(config);
-  // return response && response.data.data;
   };
 
 
@@ -45,14 +28,16 @@ const addUser = async (config) => {
   
     const url = `${baseUrl}${relativeUrl}`;
   
-    return fetch(url, config)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res);
-        }
-        return handleResponse(res);
-      })
-      .catch((e) => handleErrors(e));
+    console.log("config recieved in the backend service",config);
+    console.log('url to hit to the fetch',url);
+
+    fetch(url, config)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("data",data);
+      return data;
+    });
+
   };
 
 
@@ -62,14 +47,26 @@ const addUser = async (config) => {
   
     const url = `${baseUrl}${relativeUrl}`;
   
-    return fetch(url, config)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res);
-        }
-        return handleResponse(res);
-      })
-      .catch((e) => handleErrors(e));
+    // return fetch(url, config)
+    //   .then((res) => {
+    //     if (!res.ok) {
+    //       throw new Error(res);
+    //     }
+    //     return handleResponse(res);
+    //   })
+    //   .catch((e) => handleErrors(e));
+
+    console.log("config recieved in the backend service",config);
+    console.log('url to hit to the fetch',url);
+
+    fetch(url, config)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("data",data);
+      return data;
+    });
+
+
   };
 
   //publish an article by a publisher
@@ -78,14 +75,15 @@ const addUser = async (config) => {
   
     const url = `${baseUrl}${relativeUrl}`;
   
-    return fetch(url, config)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res);
-        }
-        return handleResponse(res);
-      })
-      .catch((e) => handleErrors(e));
+    console.log("config recieved in the backend service",config);
+    console.log('url to hit to the fetch',url);
+
+    fetch(url, config)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("data",data);
+      return data;
+    });
   };
 
 

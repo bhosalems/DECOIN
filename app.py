@@ -111,18 +111,25 @@ dummy_reviews = {
         61:{"user_id": "3", "news_id":"12", "status":"2"}
     }
 
-@app.route('/api/v1/register/', methods=['GET','POST'])
+def get_data(request):
+    data = json.loads(request.data)
+    final_data=json.loads(data)
+    return final_data
+
+
+@app.route('/api/v1/register/', methods=['POST'])
 def register():
     db_obj = NewsDatabase()
+    final_data = get_data(request)
     user_data = {}
-    if 'email' in request.forms:
-        user_data['email'] = str(request.forms['email'])
-    if 'public_addr' in request.forms:
-        user_data['public_addr'] = str(request.forms['public_addr'])
-    if 'name' in request.forms:
-        user_data['name'] = request.forms['name']
-    if 'balance' in request.forms:
-        user_data['balance'] = request.forms['balance']
+    if 'email' in final_data:
+        user_data['email'] = str(final_data['email'])
+    if 'public_addr' in final_data:
+        user_data['public_addr'] = str(final_data['public_addr'])
+    if 'name' in final_data:
+        user_data['name'] = str(final_data['name'])
+    if 'balance' in final_data:
+        user_data['balance'] = final_data['balance']
     db_obj.insert_user(user_data)
     return jsonify(user_data)
 
@@ -131,8 +138,9 @@ def register():
 def login():
     db_obj = NewsDatabase()
     validate_data = {}
-    if 'public_addr' in request.forms:
-        valid, data = db_obj.authenticate_user(request.forms['public_addr'])
+    final_data = get_data(request)
+    if 'public_addr' in final_data:
+        valid, data = db_obj.authenticate_user(final_data['public_addr'])
     validate_data['valid'] = valid
     validate_data['data'] = data
     return jsonify(validate_data)
@@ -158,7 +166,8 @@ def newsfeed():
 @app.route('/api/v1/vote/', methods=['GET'])
 def vote():
     db_obj = NewsDatabase()
-    user_id, news_id, rev = request.forms['user_id'], request.forms['news_id'], request.forms['status']
+    final_data = get_data(request)
+    user_id, news_id, rev = final_data['user_id'], final_data['news_id'], final_data['status']
     db_obj.update_review_status(user_id, news_id, rev)
     return "Vote submitted successfully"
 
@@ -177,17 +186,18 @@ def write_json(new_data, filename=NEWS_JSON_FILE):
             file_data[new_data[0]] = new_data[1]
             file.seek(0)
             json.dump(file_data, file, indent = 4)
-    
+
 
 @app.route('/api/v1/publish/', methods=['GET'])
 def publish():
     db_obj = NewsDatabase()
     article_data = {}
-    article_body = str(request.forms['article'])
+    final_data = get_data(request)
+    article_body = str(final_data['article'])
     article_data['news_id'] = db_obj.get_newsid()
-    article_data['user_id'] = request.forms['user_id']
+    article_data['user_id'] = final_data['user_id']
     article_data['timestamp'] = datetime.datetime.now()
-    article_data['tags'] = request.forms['tags']
+    article_data['tags'] = final_data['tags']
     db_obj.insert_article(article_data)
     write_json((int(article_data['news_id']), article_body), NEWS_JSON_FILE)
     return "Successfully submitted"
@@ -197,7 +207,8 @@ def publish():
 def fetch_forreview():
     db_obj = NewsDatabase()
     file_data = read_news_json()
-    user_id = request.forms['user_id']
+    final_data = get_data(request)
+    user_id = final_data['user_id']
     article_data = {}
     res = db_obj.fetch_forreview(user_id)
     for r in res:
@@ -215,7 +226,7 @@ def factcheck():
 def hello_world():
     return "Hello World"
 
-text = 'Russia has tried to implicate the United States in the leaks, and a recent Facebook post echoes this'
+
 @app.route('/api/v1/test/', methods=['GET'])
 def unit_test():
     args = dict(request.args)
@@ -251,20 +262,9 @@ def unit_test():
             id=int(args['id'])
             mock_context.request.forms = {'user_id':id}
             res = fetch_forreview()
-    elif testid == 'factcheck':
-        with app.test_request_context() as mock_context:
-            test_text = open("test_text.txt", "r")
-            mock_context.request.forms = {'query':test_text.read()}
-            res = str(factcheck())
     return res
 
 def print_request_data():
     print(flask.request.forms)
 
-@app.route('/hello')
-def helloworld():
-    return "Hello hacking world, i am abhishek from ub, and this is a test render"
-# app.run()
-
-if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)
+app.run()
