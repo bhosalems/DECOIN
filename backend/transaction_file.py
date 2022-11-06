@@ -1,9 +1,11 @@
 import sqlite3
 import random
+import os
 
 class NewsDatabase:
     def __init__(self):
-        self.conn = sqlite3.connect('../data/news.db', check_same_thread=False)
+        db_path = os.path.abspath(os.path.dirname(__file__)) + '/../data/news.db'
+        self.conn = sqlite3.connect(db_path, check_same_thread=False)
         
     
     def insert_user(self,data):
