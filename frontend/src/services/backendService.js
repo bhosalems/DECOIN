@@ -21,10 +21,58 @@ const addUser = async (config) => {
   };
 
 
+  //sign in the user
+  const signIn = async (config) => {
+    const relativeUrl = `/api/v1/login/`;
+     
+    const url = `${baseUrl}${relativeUrl}`;
+   console.log("url",url);
+ 
+   console.log("config",config);
+
+  //  const res=await fetch(url, config);
+  //  console.log("result",res.text());
+  //  if(res=="error"){
+  //   return "error"
+  //  }
+  //  else
+  //  {
+  //   return res
+  //  }
+
+  return fetch(url, config)
+      .then((res) => {
+        console.log("response",res);
+        if (!res.ok) {
+          throw new Error(res);
+        }
+        return res;
+      })
+      .catch((e) => {
+        return "error";
+      });
+   
+    // .then((response) => 
+    //   {
+    //     if(response=="error")
+    //     {
+    //       throw new Error(response);
+    //     }
+    //     return response.json();
+    //   }).then((data) => {
+    //   console.log("data",data);
+    // })
+    //  .catch((e) => {
+    //   console.log("in catch");
+    //     return "error";
+    //   });
+
+ 
+  }
 
   //vote for an article by reviewer
   const vote = async (config) => {
-    const relativeUrl = `api/v1/users/`;
+    const relativeUrl = `/api/v1/fetchreview/`;
   
     const url = `${baseUrl}${relativeUrl}`;
   
@@ -43,18 +91,11 @@ const addUser = async (config) => {
 
   //read an article by a reader
   const read = async (config) => {
-    const relativeUrl = `api/v1/users/`;
+    const relativeUrl = `/api/v1/newsfeed/`;
   
     const url = `${baseUrl}${relativeUrl}`;
   
-    // return fetch(url, config)
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw new Error(res);
-    //     }
-    //     return handleResponse(res);
-    //   })
-    //   .catch((e) => handleErrors(e));
+    
 
     console.log("config recieved in the backend service",config);
     console.log('url to hit to the fetch',url);
@@ -121,5 +162,6 @@ const addUser = async (config) => {
     addUser,
     vote,
     publish,
-    read
+    read,
+    signIn
   }

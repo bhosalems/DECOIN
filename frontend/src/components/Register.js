@@ -96,20 +96,21 @@ export default function SignUp() {
         redirect: "follow",
       };
     console.log("user:",user);
-      const register_status = scService
+      const register_status =  scService
         .register(account, data.get('Deposit'))
-        .then((e) => {
-        console.log("requestOptions passed in the fetch request",requestOptions)
-          const res = be.addUser(requestOptions);
-        });
+        .then(() =>
+              be.addUser(requestOptions)
+        );
       
         toast.promise(register_status, {
         pending: "Processing",
         success: "Registered Successfully",
         error: "Registration Failed",
       });
+   console.log("sc completed");
 
-      navigate("/", { replace: true });
+     
+      // navigate("/", { replace: true });
     // } else {
     //   toast.error("Not a Valid Deposit");
     
@@ -188,7 +189,7 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="I am not a robot."
                 />
               </Grid>
             </Grid>

@@ -26,9 +26,10 @@ const register = async (account, deposit) => {
     value: ethers.utils.parseEther(String(deposit)),
   });
   
-  if (!status.ok) {
-    window.location.reload();
-  }
+  console.log("status",status)
+  // if (!status.ok) {
+  //   window.location.reload();
+  // }
 };
 
 //reviewer votes for the article
