@@ -26,9 +26,10 @@ const register = async (account, deposit) => {
     value: ethers.utils.parseEther(String(deposit)),
   });
   
-  if (!status.ok) {
-    window.location.reload();
-  }
+  console.log("status",status)
+  // if (!status.ok) {
+  //   window.location.reload();
+  // }
 };
 
 //reviewer votes for the article
@@ -60,11 +61,13 @@ const getBalance = async (account) => {
 //writer publishes the article
 const publish = async (account, hashVal) => {
   try {
+    console.log("article",hashVal);
+    console.log("account",account);
     let hashvalue = web3.utils.soliditySha3(hashVal);
-    const status = await Dnews.methods.publish().send({
+    console.log("hashValue",hashvalue);
+    const status = await Dnews.methods.publish(String(hashvalue)).send({
       from: account,
       gas: 2000000,
-      articleHash: String(hashvalue),
     });
 
     return hashvalue;
