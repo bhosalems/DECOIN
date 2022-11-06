@@ -1,9 +1,7 @@
 import React from 'react'
 
-const ReadTab = () => {
+export const ReadTab = () => {
   return (
     <div>ReadTab</div>
   )
 }
-
-export default ReadTab

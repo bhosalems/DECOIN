@@ -1,6 +1,8 @@
 import React from 'react'
 
-const ReviewTab = () => {
+const ReviewTab = ({dat}) => {
+    console.log("reviewTab",dat);
+    
   return (
     <div>ReviewTab</div>
   )

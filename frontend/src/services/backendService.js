@@ -71,20 +71,39 @@ const addUser = async (config) => {
   }
 
   //vote for an article by reviewer
-  const vote = async (config) => {
+  const review = async (config) => {
     const relativeUrl = `/api/v1/fetchreview/`;
   
     const url = `${baseUrl}${relativeUrl}`;
   
     console.log("config recieved in the backend service",config);
     console.log('url to hit to the fetch',url);
+   
+  const res=await fetch(url, config)
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   console.log("data",data);
+    //   return data;
+    // });
+    console.log("response",res);
+    return res;
 
-    fetch(url, config)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("data",data);
-      return data;
-    });
+  };
+
+  const vote = async (config) => {
+    const relativeUrl = `/api/v1/vote/`;
+  
+    const url = `${baseUrl}${relativeUrl}`;
+  
+    console.log("config recieved in the backend service",config);
+    console.log('url to hit to the fetch',url);
+
+    let res=await fetch(url, config)
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   console.log("data",data);
+      return res;
+    // });
 
   };
 
@@ -112,7 +131,7 @@ const addUser = async (config) => {
 
   //publish an article by a publisher
   const publish = async (config) => {
-    const relativeUrl = `api/v1/users/`;
+    const relativeUrl = `/api/v1/publish/`;
   
     const url = `${baseUrl}${relativeUrl}`;
   
@@ -163,5 +182,6 @@ const addUser = async (config) => {
     vote,
     publish,
     read,
+    review,
     signIn
   }

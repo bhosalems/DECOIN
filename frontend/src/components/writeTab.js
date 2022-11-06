@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,42 +17,56 @@ import Container from '@mui/material/Container';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import scService from '../services/scService';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import web3 from "../config/web3";
 
 
 const theme = createTheme();
 
- const WriteTab=() => {
+ const WriteTab= () => {
 
-  const handleSubmit = async (event) => {
+   const [article,setArticle]=useState("")
+
+    const handleSubmit = async (event) => {
     event.preventDefault();
     var myHeaders = new Headers();
     const account = await scService.getAccount();
-
-    const data = new FormData(event.currentTarget);
-
+   
+    // const data = new FormData(event.currentTarget);
+     
+    // const text=data.get('article')
+    console.log("article",article);
+    // let textHash=web3.utils.soliditySha3(article)
+    // console.log("textHash",textHash);
 
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("publicAddress", account);
+    // myHeaders.append("publicAddress", account);
 
 
-    console.log({
-      email: data.get('title'),
-      password: data.get('article'),
-    });
-
-    
+//     console.log({
+//       email: data.get('title'),
+//       password: data.get('article'),
+//     });
+      let user=JSON.parse(localStorage.getItem('user'))
+      const userid=user.id;
+ 
+    var val={
+        'article':article,
+        'user_id':userid,
+        'tags':'sports'
+    }
+    const stringVal=JSON.stringify(val)
+    console.log("typeof",typeof stringVal);
     var requestOptions = {
         method: "POST",
         headers: myHeaders,
-        body: JSON.stringify(data),
+        body: JSON.stringify(stringVal),
         redirect: "follow",
       };
 
-      const register_status =  scService
-        .publish(account, data.get('Deposit'))
+      const register_status = scService
+        .publish(account, article)
         .then(() =>
-              be.addUser(requestOptions)
+              be.publish(requestOptions)
         );
       
         toast.promise(register_status, {
@@ -66,6 +81,12 @@ const theme = createTheme();
 
 
   };
+
+
+  const handleChange=(event)=>{
+    const val=event.target.value;
+    setArticle(val);
+}
 
   return (
     <ThemeProvider theme={theme}>
@@ -105,6 +126,7 @@ const theme = createTheme();
               name="article"
               autoComplete="article"
               autoFocus
+              onChange={handleChange}
               style={{height:100}}
             />
             

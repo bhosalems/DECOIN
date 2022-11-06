@@ -8,66 +8,19 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
-import ReadTab from './ReadTab';
 import be from './../services/backendService'
+import { ReadTab } from './ReadTab';
 import WriteTab from './writeTab';
 import ReviewTab from './ReviewTab';
+import ReviewList from './ReviewList';
 import MediaCard from './Card';
+import ReadList from './readlist';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
   
 
-   useEffect(() => {
-     
-  //  //fetch the read news
-  //   const fetchNews= async ()=>{
-
-  //   var myHeaders = new Headers();
-  //   myHeaders.append("Content-Type", "application/json");
-  //   var requestOptions = {
-  //       method: "GET",
-  //       headers: myHeaders,
-  //       redirect: "follow",
-  //     };
-      
-  //     console.log("inside fetch readtab",requestOptions);
-  //     let result_status=be.read(requestOptions)
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       console.log("result",res);
-  //     })
-  //     .catch((error) => console.log(error));
-  //    };
-
-  //   const fetchReviews= async ()=>{
-
-  //   var myHeaders = new Headers();
-  //   myHeaders.append("Content-Type", "application/json");
-  //   var requestOptions = {
-  //       method: "GET",
-  //       headers: myHeaders,
-  //       redirect: "follow",
-  //     };
-      
-  //     console.log("inside fetch reviewtab",requestOptions);
-  //     let result_status=be.read(requestOptions)
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       console.log("result",res);
-  //     })
-  //     .catch((error) => console.log(error));
-     
-  //   };
-   
-
-    //  fetchNews();
-    //  fetchReviews();
-   
-     
-   }, [])
-   
  
-
+ 
   return (
     <div
       role="tabpanel"
@@ -111,6 +64,7 @@ export default function Home() {
     setValue(newValue);
   };
   const [user,setUser]=useState(null);
+  const [reviews,setReviews]=useState(null);
 
   useEffect(() => {
      const usr=localStorage.getItem("user");
@@ -118,6 +72,61 @@ export default function Home() {
      console.log("type of user",typeof dict_usr);
      console.log("user",usr);
      setUser(dict_usr)
+
+     //
+//fetch the read news
+const fetchNews= async ()=>{
+
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    
+    console.log("inside fetch readtab",requestOptions);
+    let result_status=be.read(requestOptions)
+    .then((res) => res.json())
+    .then((res) => {
+      console.log("result",res);
+    })
+    .catch((error) => console.log(error));
+   };
+
+   const fetchReviews = async () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var user = localStorage.getItem("user");
+    var dictUser = JSON.parse(user);
+    console.log("user id", typeof dictUser);
+
+    myHeaders.append("user_id", user);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    console.log("inside fetch reviewtab", requestOptions);
+    let result_status = be
+      .review(requestOptions)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("result", res);
+        console.log("typeof result",typeof res)
+        setReviews(res);
+      })
+      .catch((error) => console.log("error",error));
+  };
+
+  fetchNews();
+  fetchReviews();
+   
+ 
+
+     //
       
   }, [])
 
@@ -174,13 +183,13 @@ export default function Home() {
       
        </Box> */}
 
-       <ReadTab/>
+       <ReadList/>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <WriteTab/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <ReviewTab/>
+        <ReviewList data={reviews}/>
       </TabPanel>
     </Box>
  
