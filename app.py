@@ -209,12 +209,12 @@ def fetch_forreview():
 def factcheck():
     query = request.forms['query']
     payload = {
-    'key': 'AIzaSyCYffI72ziHUcQ3sly2IkZJ7fFMQlMefmI',
+    'key': '',
     'query':query
     }
     url ='https://factchecktools.googleapis.com/v1alpha1/claims:search'
     response = requests.get(url,params=payload)
-    print(response.reason)
+    print(response)
     if response.status_code == 200:
         result = json.loads(response.text)
         # Arbitrarily select 1
@@ -222,8 +222,8 @@ def factcheck():
             topRating = result["claims"][0]
             # arbitrarily select top 1
             claimReview = topRating["claimReview"][0]["textualRating"]
-            claimVal = "According to " + str(topRating["claimReview"][0]['publisher']['name'])+ " that claim is " + str(claimReview)
-            return claimVal           
+            # claimVal = "According to " + str(topRating["claimReview"][0]['publisher']['name'])+ " that claim is " + str(claimReview)
+            return claimReview           
         except:
             print("No claim review field found.")
             return 0
@@ -273,7 +273,7 @@ def unit_test():
             res = fetch_forreview()
     elif testid == 'factcheck':
         with app.test_request_context() as mock_context:
-            mock_context.request.forms = {'query':"Trump is making money off covid coins."}
+            mock_context.request.forms = {'query':'Speaker Nancy Pelosi held a T-shirt that reads, “I’m proud of my gay husband."'}
             res = factcheck()
             print(res)
             res = "P"
