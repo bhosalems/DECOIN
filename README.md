@@ -1,4 +1,5 @@
 # DECOIN - Decentralized Coin Incentivised News.
+This repository is a submission to the [UB fall 2022 hackathon](https://devpost.com/software/decoin) 
 ## Inspiration
 News articles serve as a highly relevant source of information on current topics and salient political issues. News coverage is not just the communication of facts; on the contrary, news articles put facts into context and transport specific opinions. Hence, how the news covers a topic or issue can decisively impact public debates and affect our collective decision-making.
 
