@@ -29,9 +29,9 @@ Coming from different software backgrounds we as individual team members had to 
 Going forward, all users need to buy a monthly subscription to get unlimited access to all the news to make it more viable.
 
 ## Built With
-docker
-flask
-python
-react
-solidity
-sqlite
+`docker`
+`flask`
+`python`
+`react`
+`solidity`
+`sqlite`
